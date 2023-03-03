@@ -9,8 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "antd-mobile": "^5.28.1",
+    "axios": "^1.3.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.2",
+    "redux": "^4.2.1",
+    "redux-promise": "^0.6.0",
+    "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

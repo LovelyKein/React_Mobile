@@ -1,7 +1,5 @@
-import React, { Component, lazy, Suspense } from "react";
+import { lazy, Suspense, LazyExoticComponent } from "react";
 import {
-  RouteObject,
-  Navigate,
   NavigateFunction,
   Location,
   Params,
@@ -15,11 +13,13 @@ import {
 
 import { RouterInfo, allRouter } from "@/store/reducer/modules/user";
 
+// 骨架屏
+import Skeleton from "@/components/Skeleton";
+
 // 路由导航选项
 interface RouterNavOptions {
-  [key: string]: React.LazyExoticComponent<() => JSX.Element>;
+  [key: string]: LazyExoticComponent<() => JSX.Element>;
 }
-
 const routerNav: RouterNavOptions = {
   Home: lazy(() => import("@/views/home/Home")),
   Detail: lazy(() => import("@/views/detail/Detail")),
@@ -38,13 +38,13 @@ interface ElementComponentPropsType {
 }
 // 统一处理参数的包裹组件
 function Element(props: {
-  component: React.LazyExoticComponent<
+  component: LazyExoticComponent<
     (props: ElementComponentPropsType) => JSX.Element
   >;
   meta: {[key: string]: string}
 }) {
   const { component: ElementComponent, meta } = props;
-  console.log(meta);
+  // console.log(meta);
 
   // 设置页面标题
   const { title = '知乎日报-WebApp'} = meta
@@ -82,10 +82,10 @@ function routerRecursion(routes: RouterInfo[]) {
   );
 }
 
-
+// 创建路由规则和视图
 export function createRouterView() {
   return (
-    <Suspense fallback={<h1>Loading...</h1>}>
+    <Suspense fallback={<Skeleton />}>
       <Routes>{routerRecursion(allRouter)}</Routes>
     </Suspense>
   );

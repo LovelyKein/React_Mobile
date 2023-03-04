@@ -10,7 +10,7 @@ export default defineConfig({
     open: true,
     proxy: {
       "/proxyApi": {
-        target: "http://localhost:5001",
+        target: "http://localhost:7100",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/proxyApi/, ""),
       },
@@ -22,5 +22,5 @@ export default defineConfig({
       "@": path.join(__dirname, "src"),
       "#": path.join(__dirname, "types"),
     },
-  }
+  },
 });

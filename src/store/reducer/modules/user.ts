@@ -18,7 +18,7 @@ export const allRouter = [
     // component: withKeepAlive(Home, { cacheId: "home", scroll: true }),
     component: "Home",
     meta: {
-      title: "知乎日报-WebApp",
+      title: "首页-知乎日报",
     },
   },
   {

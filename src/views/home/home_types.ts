@@ -22,7 +22,7 @@ interface StoriesData {
 
 export interface NewsData {
   date: string;
-  list: StoriesData[];
+  stories: StoriesData[];
 }
 
 export interface GetNews {

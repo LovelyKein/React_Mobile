@@ -53,8 +53,33 @@ export function hourSlogan(): string {
     slogan = '来一杯🥤'
   } else if (h > 18 && h <= 22) {
     slogan = '晚安😊'
-  } else if (h < 5 || h > 22 && h <= 24) {
+  } else if (h < 5 || (h > 22 && h <= 24)) {
     slogan = '记得休息😴'
   }
   return slogan
+}
+
+// 时间格式化
+/**
+@params {20230307}
+**/
+export function formatTime(
+  t: string,
+  template: string = "{0}年{1}月{2}日 {3}:{4}:{5}"
+): string {
+  let arr: string[] = []
+  if (/^\d{8}$/.test(t)) {
+    const execResult: RegExpMatchArray | null = /^(\d{4})(\d{2})(\d{2})$/.exec(t);
+     if (execResult) {
+      arr.push(execResult[1])
+      arr.push(execResult[2])
+      arr.push(execResult[3])
+     }
+  }
+  return template.replace(/\{(\d+)\}/g, (substring, index) => {
+    // console.log(substring, index)
+    let arrItem: string = arr[index] || "00";
+    if (arrItem.length < 2) arrItem = "0" + arrItem;
+    return arrItem;
+  });
 }

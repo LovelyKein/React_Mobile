@@ -8,7 +8,7 @@ import TopHeader from "@/components/topHeader/TopHeader";
 import NewItem from "@/components/newItem/NewItem";
 
 // antd
-import { Swiper, Image, Divider, DotLoading } from "antd-mobile";
+import { Swiper, Image, Divider, DotLoading, SafeArea } from "antd-mobile";
 
 // api
 import { news as newsApi } from "@/api/api";
@@ -110,7 +110,9 @@ export default function Home() {
           return (
             <div className="news_oneday" key={date}>
               {index !== 0 ? (
-                <Divider contentPosition="left">{formatTime(date, '{1}月{2}日')}</Divider>
+                <Divider contentPosition="left">
+                  {formatTime(date, "{1}月{2}日")}
+                </Divider>
               ) : (
                 ""
               )}
@@ -134,13 +136,14 @@ export default function Home() {
       </div>
       {/* 数据加载中 */}
       <div
-        style={{ display: newsList.length ? "block" : "none" }}
+        style={{ display: newsList.length ? "flex" : "none" }}
         className="loading"
-        ref={loadingRef}
+        ref={loadingRef as LegacyRef<HTMLDivElement>}
       >
         <span>数据加载中 </span>
         <DotLoading />
       </div>
+      <SafeArea position="bottom" />
     </div>
   );
 }

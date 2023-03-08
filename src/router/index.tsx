@@ -1,8 +1,5 @@
 import { lazy, Suspense, LazyExoticComponent } from "react";
 import {
-  NavigateFunction,
-  Location,
-  Params,
   Route,
   Routes,
   useLocation,
@@ -12,6 +9,9 @@ import {
 } from "react-router-dom";
 
 import { RouterInfo, allRouter } from "@/store/reducer/modules/user";
+
+// types
+import { ElementComponentPropsType } from "@/types/component_props_type";
 
 // 骨架屏
 import Skeleton from "@/components/Skeleton";
@@ -30,12 +30,6 @@ const routerNav: RouterNavOptions = {
   ErrorPage: lazy(() => import("@/views/error/ErrorPage")),
 };
 
-interface ElementComponentPropsType {
-  navigate: NavigateFunction;
-  location: Location;
-  params: Readonly<Params<string>>;
-  searchQuery: URLSearchParams;
-}
 // 统一处理参数的包裹组件
 function Element(props: {
   component: LazyExoticComponent<
@@ -74,7 +68,7 @@ function routerRecursion(routes: RouterInfo[]) {
               <Element component={routerNav[item.component]} meta={item.meta} />
             }
           >
-            { item.children && item.children.length ? routerRecursion(item.children) : '' }
+            { item.children && item.children.length ? routerRecursion(item.children) : null }
           </Route>
         );
       })}

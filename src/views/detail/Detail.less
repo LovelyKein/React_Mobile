@@ -10,10 +10,52 @@
   min-height: 100%;
   height: max-content;
   position: relative;
+  padding-bottom: 60px;
+  box-sizing: border-box;
+  .content_box {
+    width: 100%;
+    overflow-x: hidden;
+    .main-wrap {
+      .headline {
+        width: 100%;
+        height: 10rem;
+        position: relative;
+        .title {
+          position: absolute;
+          bottom: 25px;
+          left: 0;
+          width: 100%;
+          color: #ffffff;
+          padding: 0 20px;
+          box-sizing: border-box;
+          font-size: 20px;
+          line-height: 1.2em;
+          text-align: left;
+        }
+        .img-place-holder {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+      }
+      .content-inner {
+        .question {
+          .answer {
+            .meta {
+              display: flex;
+              .avatar {
+                margin-right: 8px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   .tabBar {
     width: 100%;
     height: 54px;
-    background-color: #ffffff;
+    background-color: #f6f6f6;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -47,7 +89,7 @@
         &:extend(.flex);
         justify-content: center;
         i {
-          color: #303030;
+          color: #333333;
         }
         .count {
           position: absolute;

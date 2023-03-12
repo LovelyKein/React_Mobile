@@ -29,7 +29,7 @@ export default function Home() {
   // 组件挂载 18特性，useEffect 挂载会执行两次
   useEffect(() => {
     // 第一次初始化数据
-    const asyncRequest = async () => {
+    const waitDispose = setTimeout(async () => {
       try {
         // 获取新闻列表
         const res = await newsApi.getNews();
@@ -45,8 +45,7 @@ export default function Home() {
       } catch (error) {
         console.error(error);
       }
-    };
-    const waitDispose = setTimeout(asyncRequest, 50);
+    }, 50);
 
     // 监听触底事件（显示加载更多），则发送请求获取之前日期的数据
     let touchBottom: IntersectionObserver | null = new IntersectionObserver(

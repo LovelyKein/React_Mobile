@@ -11,9 +11,9 @@ export default function TopHeader() {
   const navigate = useNavigate()
   const [time, setTime] = useState<string>(new Date().toLocaleDateString()) // 时间
   const timeText = useMemo(() => {
-    const timeArr = time.split('/')
-    const month = ToTextOfMonth(timeArr[1])
-    let day: string | number = Number(timeArr[2])
+    // const timeArr = time.split('/')
+    const month = ToTextOfMonth(new Date(time).getMonth())
+    let day: number | string = new Date(time).getDate()
     if (day < 10) day = '0' + day
     return {
       month,

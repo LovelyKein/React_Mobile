@@ -37,7 +37,7 @@ export function deepClone(target: any) {
 // 根据数字返回中文月数
 export function ToTextOfMonth(m: string | number): string {
   if (typeof m === 'string') m = Number(m)
-  const textArr = ['*', '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+  const textArr = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
   return textArr[m]
 }
 

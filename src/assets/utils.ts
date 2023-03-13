@@ -83,3 +83,33 @@ export function formatTime(
     return arrItem;
   });
 }
+
+// 设置有时间限制的 localStorage，默认保存时间是 30 天
+export const storage = {
+  set(key: string, value: string, long: number = 2592000000): void {
+    localStorage.setItem(key, JSON.stringify({
+      value,
+      time: new Date().getTime() + long // 周期
+    }))
+  },
+  get(key: string): string {
+    if (localStorage.getItem(key)) {
+      const {value, time} = JSON.parse(localStorage.getItem(key)!)
+      const nowTime = new Date().getTime()
+      let result: string = ''
+      if (nowTime > time) {
+        // 超时
+        this.remove(key)
+        result = ''
+      } else {
+        result = value
+      }
+      return result
+    } else {
+      return ''
+    }
+  },
+  remove(key: string) {
+    localStorage.removeItem(key)
+  }
+}

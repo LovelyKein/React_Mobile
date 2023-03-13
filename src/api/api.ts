@@ -53,7 +53,7 @@ const user = {
     return request({
       method: 'POST',
       url: '/login',
-      params
+      data: `phone=${params.phone}&code=${params.code}`
     })
   }
 }

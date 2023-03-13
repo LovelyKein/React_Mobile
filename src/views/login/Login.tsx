@@ -18,9 +18,18 @@ import { Toast } from "antd-mobile";
 // api
 import { user } from "@/api/api";
 
+// utils
+import { storage } from "@/assets/utils"
+
+// redux
+import { connect } from "react-redux"
+import actions from "@/store/action";
+
 // types
 import { TestCode, LoginInfo, LoginForm } from "@/views/login/login_types";
 import { ElementComponentPropsType } from "@/types/component_props_type";
+import { reducerType } from "@/store/reducer";
+import { InitialUser } from "@/store/reducer/modules/user";
 
 // 校验规则
 const rules = {
@@ -50,7 +59,7 @@ const rules = {
   ],
 };
 
-export default function Login(props: ElementComponentPropsType) {
+function Login(props: ElementComponentPropsType) {
   // useState
   const [formData, setFormData] = useState<LoginForm>({ phone: "", code: "" }),
     [codeText, setCodeText] = useState<string>("获取验证码"),
@@ -59,7 +68,7 @@ export default function Login(props: ElementComponentPropsType) {
   // useRef
 
   // props
-  const { navigate } = props;
+  const { navigate, request_login, user_reducer } = props;
 
   /* methods */
   // 设置表单内容
@@ -109,7 +118,7 @@ export default function Login(props: ElementComponentPropsType) {
         }
       }, () => {
         Toast.show({
-          icon: 'loading',
+          icon: "fail",
           content: "发送失败",
           maskClickable: false,
         });
@@ -119,26 +128,27 @@ export default function Login(props: ElementComponentPropsType) {
   // 提交表单
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 组织表单默认提交行为
-    console.log(event);
+    // 登录
+    request_login(formData)
   };
-  // 校验
-  const formCheck = (
-    key: "phone" | "code"
-  ): { message: string; show: boolean } => {
-    let message = "错误错误";
-    let show = false;
-    const ruleArr = rules[key];
-    ruleArr.forEach((item) => {
-      document.getElementsByName(key)[0].addEventListener(item.trigger, (event) => {
-        console.log(event);
-        // console.log(formRef)
-      });
-    });
-    return {
-      message,
-      show,
-    };
-  };
+  // // 校验
+  // const formCheck = (
+  //   key: "phone" | "code"
+  // ): { message: string; show: boolean } => {
+  //   let message = "错误错误";
+  //   let show = false;
+  //   const ruleArr = rules[key];
+  //   ruleArr.forEach((item) => {
+  //     document.getElementsByName(key)[0].addEventListener(item.trigger, (event) => {
+  //       console.log(event);
+  //       // console.log(formRef)
+  //     });
+  //   });
+  //   return {
+  //     message,
+  //     show,
+  //   };
+  // };
 
   // 组件挂载
   useEffect(() => {
@@ -152,14 +162,21 @@ export default function Login(props: ElementComponentPropsType) {
     }
   }, [])
 
+  // 监听
+  useEffect(() => {
+    const { token } = user_reducer!
+    if (token.length !== 0) {
+      console.log(storage.get("Token"));
+    }
+  }, [user_reducer])
+
   return (
     <div className="login_container">
       {/* 导航栏 */}
       <NavBar
         style={{
           backgroundColor: "#ffffff",
-          padding: "0 20px",
-          height: "56px",
+          padding: "0 20px"
         }}
         // leftText='返回'
         righeContent={
@@ -185,13 +202,13 @@ export default function Login(props: ElementComponentPropsType) {
             <div className="form_item">
               <i className="iconfont icon-weidenglu" />
               <input
-                id="phone"
                 className="phone"
                 type="text"
                 placeholder="请输入手机号码"
                 name="phone"
                 maxLength={11}
                 onChange={(event) => changeForm("phone", event)}
+                value={formData.phone}
               />
               {/* <span
                 style={{ display: formCheck("phone").show ? "block" : "none" }}
@@ -203,13 +220,13 @@ export default function Login(props: ElementComponentPropsType) {
             <div className="form_item">
               <i className="iconfont icon-yanzhengma" />
               <input
-                id="code"
                 className="code"
                 type="text"
                 placeholder="短信验证码"
                 name="code"
                 maxLength={6}
                 onChange={(event) => changeForm("code", event)}
+                value={formData.code}
               />
               <button
                 type="button"
@@ -234,3 +251,9 @@ export default function Login(props: ElementComponentPropsType) {
     </div>
   );
 }
+
+export default connect((store: reducerType) => {
+  return {
+    user_reducer: store.user
+  };
+}, actions.userAction)(Login)

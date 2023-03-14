@@ -1,4 +1,5 @@
 import axios from "axios"
+import { storage } from "@/assets/utils"
 
 const request = axios.create({
   baseURL: '/proxyApi',
@@ -7,6 +8,8 @@ const request = axios.create({
 
 // 请求拦截器
 request.interceptors.request.use((config) => {
+  const token = storage.get('Token')
+  token ? config.headers["authorization"] = token : null // 携带 token
   return config
 }, (err) => {
   return Promise.reject(err)

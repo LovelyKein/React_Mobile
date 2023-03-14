@@ -3,7 +3,7 @@ import request from "./interface";
 // types
 import { GetNews, NewsData } from "@/views/home/home_types";
 import { NewsDetail } from "@/views/detail/detail_types";
-import { TestCode, LoginInfo, LoginForm } from "@/views/login/login_types";
+import { TestCode, LoginInfo, LoginForm, UserInfoPromise } from "@/views/login/login_types";
 
 /* 新闻 */
 const news = {
@@ -51,12 +51,20 @@ const user = {
   // 登录
   login: (params: LoginForm): Promise<LoginInfo> => {
     return request({
-      method: 'POST',
-      url: '/login',
-      data: `phone=${params.phone}&code=${params.code}`
-    })
-  }
-}
+      method: "POST",
+      url: "/login",
+      data: `phone=${params.phone}&code=${params.code}`,
+    });
+  },
+  // 获取用户信息
+  getUserInfo: (): Promise<UserInfoPromise> => {
+    return request({
+      method: "GET",
+      url: "/user_info",
+      responseType: "json",
+    });
+  },
+};
 
 // 导出
 export { news, user };

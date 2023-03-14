@@ -85,7 +85,9 @@ export default function Detail(props: ElementComponentPropsType) {
 
   // 监听
   useEffect(() => {
-    disposeImageAndTitle(newInfo?.image!, newInfo?.title!)
+    if (newInfo) {
+      disposeImageAndTitle(newInfo.image, newInfo.title);
+    }
   }, [newInfo])
 
   return (

@@ -18,18 +18,14 @@ import { Toast } from "antd-mobile";
 // api
 import { user } from "@/api/api";
 
-// utils
-import { storage } from "@/assets/utils"
-
 // redux
-import { connect } from "react-redux"
+import { connect } from "react-redux";
 import actions from "@/store/action";
 
 // types
-import { TestCode, LoginInfo, LoginForm } from "@/views/login/login_types";
+import { LoginForm } from "@/views/login/login_types";
 import { ElementComponentPropsType } from "@/types/component_props_type";
 import { reducerType } from "@/store/reducer";
-import { InitialUser } from "@/store/reducer/modules/user";
 
 // 校验规则
 const rules = {
@@ -68,7 +64,7 @@ function Login(props: ElementComponentPropsType) {
   // useRef
 
   // props
-  const { navigate, request_login, user_reducer } = props;
+  const { navigate, request_login } = props;
 
   /* methods */
   // 设置表单内容
@@ -82,54 +78,84 @@ function Login(props: ElementComponentPropsType) {
   };
   // 获取验证码
   let timer: NodeJS.Timer | null = null;
-  let count: number = 29
+  let count: number = 29;
   const getCode = () => {
-    if (isCounting) return
+    if (isCounting) return;
     if (!formData.phone) {
       Toast.show({
         content: "清先输入手机号码",
         maskClickable: false,
       });
     } else {
-      user.getCode(formData.phone).then((res) => {
-        const {code} = res
-        if (code === 0) {
-          Toast.show({
-            icon: "success",
-            content: "发送成功",
-            maskClickable: false,
-            duration: 1000,
-            afterClose: () => {
-              setIsCounting(true)
-              if (!timer) {
-                timer = setInterval(() => {
-                  count--
-                  setCodeText(`${count}秒后获取`)
-                  if (count === 0 && timer) {
-                    clearInterval(timer)
-                    count = 0
-                    setIsCounting(false)
-                    setCodeText('获取验证码')
-                  }
-                }, 1000)
-              }
+      user.getCode(formData.phone).then(
+        (res) => {
+          const { code } = res;
+          if (code === 0) {
+            Toast.show({
+              icon: "success",
+              content: "发送成功",
+              maskClickable: false,
+              duration: 1000,
+            });
+            setIsCounting(true);
+            if (!timer) {
+              timer = setInterval(() => {
+                count--;
+                setCodeText(`${count}秒后获取`);
+                if (count === 0 && timer) {
+                  clearInterval(timer);
+                  count = 0;
+                  setIsCounting(false);
+                  setCodeText("获取验证码");
+                }
+              }, 1000);
             }
+          }
+          setFormData({ ...formData, code: "" });
+        },
+        () => {
+          Toast.show({
+            icon: "fail",
+            content: "发送失败",
+            maskClickable: false,
           });
         }
-      }, () => {
-        Toast.show({
-          icon: "fail",
-          content: "发送失败",
-          maskClickable: false,
-        });
-      })
+      );
     }
   };
   // 提交表单
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 组织表单默认提交行为
     // 登录
-    request_login(formData)
+    user.login(formData).then(
+      (res) => {
+        const { code, token } = res;
+        if (code === 0) {
+          request_login(token); // redux 储存
+          Toast.show({
+            content: "登录成功",
+            maskClickable: false,
+            duration: 2000,
+          });
+        } else {
+          Toast.show({
+            icon: "fail",
+            content: "登录失败",
+            maskClickable: false,
+            duration: 1500,
+          });
+        }
+        setFormData({ ...formData, code: "" });
+      },
+      () => {
+        Toast.show({
+          icon: "fail",
+          content: "登录失败",
+          maskClickable: false,
+          duration: 1500,
+        });
+      }
+    );
   };
   // // 校验
   // const formCheck = (
@@ -155,20 +181,12 @@ function Login(props: ElementComponentPropsType) {
     // 组件卸载
     return () => {
       if (timer) {
-        clearInterval(timer)
-        timer = null
-        count = 29
+        clearInterval(timer);
+        timer = null;
+        count = 29;
       }
-    }
-  }, [])
-
-  // 监听
-  useEffect(() => {
-    const { token } = user_reducer!
-    if (token.length !== 0) {
-      console.log(storage.get("Token"));
-    }
-  }, [user_reducer])
+    };
+  }, []);
 
   return (
     <div className="login_container">
@@ -176,7 +194,7 @@ function Login(props: ElementComponentPropsType) {
       <NavBar
         style={{
           backgroundColor: "#ffffff",
-          padding: "0 20px"
+          padding: "0 20px",
         }}
         // leftText='返回'
         righeContent={
@@ -194,11 +212,7 @@ function Login(props: ElementComponentPropsType) {
         </div>
         {/* 登录表单 */}
         <div className="form_box">
-          <form
-            className="form"
-            onSubmit={(event) => submit(event)}
-            action=""
-          >
+          <form className="form" onSubmit={(event) => submit(event)} action="">
             <div className="form_item">
               <i className="iconfont icon-weidenglu" />
               <input
@@ -243,7 +257,7 @@ function Login(props: ElementComponentPropsType) {
               </span> */}
             </div>
             <button type="submit" className="submit">
-              登录/注册
+              登录 / 注册
             </button>
           </form>
         </div>
@@ -254,6 +268,6 @@ function Login(props: ElementComponentPropsType) {
 
 export default connect((store: reducerType) => {
   return {
-    user_reducer: store.user
+    user_reducer: store.user,
   };
-}, actions.userAction)(Login)
+}, actions.userAction)(Login);

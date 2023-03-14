@@ -10,12 +10,11 @@ import { Toast } from "antd-mobile";
 import { user } from "@/api/api";
 
 // types
-import { LoginForm } from "@/views/login/login_types";
+import { LoginForm, UserInfo } from "@/views/login/login_types";
 
 const userAction = {
-  // 登录
-  request_login(formData: LoginForm) {
-    // thunk 风格
+  // 登录（异步）thunk 风格
+  request_login_async(formData: LoginForm) {
     return (dispatch: Dispatch) => {
       user.login(formData).then(
         (res) => {
@@ -28,17 +27,39 @@ const userAction = {
           } else {
             dispatch({
               type: user_action.LOGIN,
-              data: '',
+              data: "",
             });
           }
         },
         () => {
           dispatch({
             type: user_action.LOGIN,
-            data: '',
+            data: "",
           });
         }
       );
+    };
+  },
+  // 登录
+  request_login(token: string): ObjAction {
+    // thunk 风格
+    return {
+      type: user_action.LOGIN,
+      data: token,
+    };
+  },
+  // 获取用户信息(异步) promise 风格
+  async requset_userInfo_async(): Promise<ObjAction> {
+    let info: UserInfo | null = null;
+    try {
+      const { code, data } = await user.getUserInfo();
+      if (code === 0) {
+        info = data;
+      }
+    } catch (_) {}
+    return {
+      type: user_action.GET_USER_INFO,
+      data: info,
     };
   },
 };

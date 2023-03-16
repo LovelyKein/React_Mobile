@@ -3,9 +3,6 @@ import { user_action } from "@/store/action_name";
 // redux
 import { Dispatch } from "redux";
 
-// antd
-import { Toast } from "antd-mobile";
-
 // api
 import { user } from "@/api/api";
 

@@ -64,8 +64,8 @@ function Login(props: ElementComponentPropsType) {
   // useRef
 
   // props
-  const { navigate, request_login } = props;
-
+  const { navigate, searchQuery, request_login, requset_userInfo_async } = props;
+  
   /* methods */
   // 设置表单内容
   const changeForm = (
@@ -125,18 +125,22 @@ function Login(props: ElementComponentPropsType) {
   };
   // 提交表单
   const submit = (event: FormEvent<HTMLFormElement>) => {
+    
     event.preventDefault(); // 组织表单默认提交行为
     // 登录
     user.login(formData).then(
       (res) => {
         const { code, token } = res;
         if (code === 0) {
-          request_login(token); // redux 储存
-          Toast.show({
-            content: "登录成功",
-            maskClickable: false,
-            duration: 2000,
-          });
+          request_login(token); // redux 储存 token
+          // 异步 redux 获取用户信息
+          requset_userInfo_async().then(() => {
+            Toast.show({
+              content: "登录成功",
+              maskClickable: false,
+              duration: 2000,
+            });
+          })
         } else {
           Toast.show({
             icon: "fail",
@@ -146,14 +150,6 @@ function Login(props: ElementComponentPropsType) {
           });
         }
         setFormData({ ...formData, code: "" });
-      },
-      () => {
-        Toast.show({
-          icon: "fail",
-          content: "登录失败",
-          maskClickable: false,
-          duration: 1500,
-        });
       }
     );
   };

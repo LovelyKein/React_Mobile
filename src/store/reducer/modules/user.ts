@@ -1,6 +1,9 @@
 import { deepClone, storage } from "@/assets/utils";
 import { user_action } from "@/store/action_name";
 
+// types
+import { UserInfo } from '@/views/login/login_types'
+
 export interface RouterInfo {
   path: string;
   name: string;
@@ -74,24 +77,32 @@ export const allRouter = [
 
 // 初始状态
 export interface InitialUser {
-  allRouter: RouterInfo[];
+  // allRouter: RouterInfo[];
   token: string;
+  userInfo: UserInfo | null;
 }
 const initial: InitialUser = {
-  allRouter,
-  token: storage.get('Token'),
+  // allRouter,
+  token: storage.get('Token') || '',
+  userInfo: null
 };
 
 export default function userReducer(state = initial, action: ObjAction) {
-  const { LOGIN } = user_action;
+  const { LOGIN, GET_USER_INFO } = user_action;
+
   const cloneState = deepClone(state) as InitialUser;
 
   switch (action.type) {
+    // 登录
     case LOGIN: {
       // 长久储存 token，时间为 30 天
       storage.set('Token', action.data as string)
       cloneState.token = action.data as string
       break;
+    }
+    // 获取用户信息
+    case GET_USER_INFO: {
+      cloneState.userInfo = action.data as UserInfo | null
     }
     default: {
       break;

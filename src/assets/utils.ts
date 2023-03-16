@@ -9,9 +9,8 @@
 //   | boolean
 //   | void;
 export function deepClone(target: any) {
-  if (typeof target === 'undefined') throw new Error('请传递正确的值')
   let result: unknown
-  const BASE_TYPE = ['number', 'string', 'boolean', 'function']
+  const BASE_TYPE = ['number', 'string', 'boolean', 'function', 'undefined']
   if (BASE_TYPE.includes(typeof target)) {
     result = target
   } else {

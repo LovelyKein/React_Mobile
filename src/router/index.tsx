@@ -14,8 +14,12 @@ import { RouterInfo, allRouter } from "@/store/reducer/modules/user";
 import actions from "@/store/action";
 
 // types
-import { ElementComponentPropsType } from "@/types/component_props_type";
+import { ElementComponentPropsType } from "@/types/component_props_type"; // 路由组件的默认属性 props 类型
 import { UserInfo } from "@/views/login/login_types";
+
+type RouterComponent = LazyExoticComponent<
+  (props: ElementComponentPropsType) => JSX.Element
+>;
 
 // 骨架屏
 import Skeleton from "@/components/Skeleton";
@@ -24,13 +28,9 @@ import Skeleton from "@/components/Skeleton";
 import { Toast, Mask, DotLoading } from "antd-mobile";
 
 // 路由导航选项
-type RouterComponent = LazyExoticComponent<
-  (props: ElementComponentPropsType) => JSX.Element
->;
-interface RouterNavOptions {
+const routerNav: {
   [key: string]: RouterComponent;
-}
-const routerNav: RouterNavOptions = {
+} = {
   Home: lazy(() => import("@/views/home/Home")),
   Detail: lazy(() => import("@/views/detail/Detail")),
   Personal: lazy(() => import("@/views/personal/Personal")),
@@ -73,7 +73,7 @@ function Element(props: {
           if (!userInfo) {
             Toast.show({
               icon: "fail",
-              content: "获取信息失败，请先登录",
+              content: "请先登录",
               maskClickable: false,
               duration: 1000,
               afterClose: () => {
@@ -81,18 +81,18 @@ function Element(props: {
                 obj.navigate(
                   {
                     pathname: "/login",
-                    search: `?to=${path}`,
+                    search: `?to=${obj.location.pathname}`,
                   },
                   { replace: true }
                 );
-              }
+              },
             });
           } else {
             store.dispatch(userInfo_action); // 获取到了用户信息，存储到 redux 中
             // 跳转到目标页面
             obj.navigate({
-              pathname: `/${path}`
-            })
+              pathname: `/${path}`,
+            });
           }
         });
       } else {
@@ -115,7 +115,7 @@ function Element(props: {
           <div
             style={{
               fontSize: "16px",
-              color: "#878cee",
+              color: "#9fa3f0",
               position: "absolute",
               left: "50%",
               top: "50%",
@@ -123,7 +123,7 @@ function Element(props: {
               transform: "translate(-50%, -50%)",
             }}
           >
-            <span>数据加载中</span>
+            {/* <span>数据加载中</span> */}
             <DotLoading color="currentColor" />
           </div>
         </Mask>

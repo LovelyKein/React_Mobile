@@ -8,11 +8,20 @@ import { user } from "@/api/api";
 
 // types
 import { LoginForm, UserInfo } from "@/views/login/login_types";
+import { CollectItem } from "@/views/collect/collect_types";
 
-const userAction = {
+export interface UserActions {
+  request_login_async: (arg0: LoginForm) => (arg0: Dispatch) => void;
+  request_login: (arg0: string) => ObjAction;
+  requset_userInfo_async: () => Promise<ObjAction>;
+  request_collectList_async: () => Promise<ObjAction>;
+  request_logout: () => ObjAction
+}
+
+const userAction: UserActions = {
   // 登录（异步）thunk 风格
-  request_login_async(formData: LoginForm) {
-    return (dispatch: Dispatch) => {
+  request_login_async(formData) {
+    return (dispatch) => {
       user.login(formData).then(
         (res) => {
           const { code, token } = res;
@@ -38,7 +47,7 @@ const userAction = {
     };
   },
   // 登录
-  request_login(token: string): ObjAction {
+  request_login(token) {
     // thunk 风格
     return {
       type: user_action.LOGIN,
@@ -46,7 +55,7 @@ const userAction = {
     };
   },
   // 获取用户信息(异步) promise 风格
-  async requset_userInfo_async(): Promise<ObjAction> {
+  async requset_userInfo_async() {
     let info: UserInfo | null = null;
     try {
       const { code, data } = await user.getUserInfo();
@@ -58,6 +67,26 @@ const userAction = {
       type: user_action.GET_USER_INFO,
       data: info,
     };
+  },
+  // 获取 用户的新闻收藏列表（异步）promise 风格
+  async request_collectList_async() {
+    let info: CollectItem[] = [];
+    try {
+      const { code, data } = await user.getCollectList();
+      if (code === 0) {
+        info = data;
+      }
+    } catch (_) {}
+    return {
+      type: user_action.GET_COLLECT_LIST,
+      data: info,
+    };
+  },
+  // 退出登录
+  request_logout() {
+    return {
+      type: user_action.LOGOUT
+    }
   },
 };
 

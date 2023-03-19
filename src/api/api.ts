@@ -4,6 +4,7 @@ import request from "./interface";
 import { GetNews, NewsData } from "@/views/home/home_types";
 import { NewsDetail } from "@/views/detail/detail_types";
 import { TestCode, LoginInfo, LoginForm, UserInfoPromise } from "@/views/login/login_types";
+import { CollectListPromise } from "@/views/collect/collect_types"
 
 /* 新闻 */
 const news = {
@@ -38,7 +39,7 @@ const news = {
   },
 };
 
-/* 登录 */
+/* 用户 */
 const user = {
   // 获取验证码
   getCode: (phone: string): Promise<TestCode> => {
@@ -64,6 +65,34 @@ const user = {
       responseType: "json",
     });
   },
+  // 收藏新闻
+  addCollect: (newsId: string): Promise<TestCode> => {
+    return request({
+      method: "POST",
+      url: "/store",
+      data: `newsId=${newsId}`,
+      responseType: "json",
+    });
+  },
+  // 移除收藏
+  removeCollect: (id: number): Promise<TestCode> => {
+    return request({
+      method: 'GET',
+      url: '/store_remove',
+      params: {
+        id
+      },
+      responseType: 'json'
+    })
+  },
+  // 获取收藏新闻的列表
+  getCollectList: (): Promise<CollectListPromise> => {
+    return request({
+      method: 'GET',
+      url: '/store_list',
+      responseType: 'json'
+    })
+  }
 };
 
 // 导出

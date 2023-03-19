@@ -2,10 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "path"
 import postCssPxToRem from "postcss-pxtorem"
+// import babel from 'babel-plugin-styled-components'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react()
+  ],
   server: {
     port: 8100,
     open: true,
@@ -23,7 +26,7 @@ export default defineConfig({
         postCssPxToRem({
           rootValue: 37.5, // 1rem的大小
           propList: ["*"], // 需要转换的属性，这里选择全部都进行转换
-          mediaQuery: false
+          mediaQuery: false,
         }),
       ],
     },

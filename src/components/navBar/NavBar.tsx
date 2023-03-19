@@ -15,7 +15,7 @@ interface PropsType {
 }
 
 export default function NavBar(props: PropsType = {
-  children: '标题',
+  children: '知乎日报',
   hasLeftArrow: true,
   leftText: '',
   righeContent: null

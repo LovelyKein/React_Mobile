@@ -3,6 +3,7 @@ import { user_action } from "@/store/action_name";
 
 // types
 import { UserInfo } from '@/views/login/login_types'
+import { CollectItem } from "@/views/collect/collect_types"
 
 export interface RouterInfo {
   path: string;
@@ -80,15 +81,17 @@ export interface InitialUser {
   // allRouter: RouterInfo[];
   token: string;
   userInfo: UserInfo | null;
+  collectList: CollectItem[]; // 收藏列表
 }
 const initial: InitialUser = {
   // allRouter,
   token: storage.get('Token') || '',
-  userInfo: null
+  userInfo: null,
+  collectList: []
 };
 
 export default function userReducer(state = initial, action: ObjAction) {
-  const { LOGIN, GET_USER_INFO } = user_action;
+  const { LOGIN, GET_USER_INFO, GET_COLLECT_LIST, LOGOUT } = user_action;
 
   const cloneState = deepClone(state) as InitialUser;
 
@@ -96,13 +99,26 @@ export default function userReducer(state = initial, action: ObjAction) {
     // 登录
     case LOGIN: {
       // 长久储存 token，时间为 30 天
-      storage.set('Token', action.data as string)
-      cloneState.token = action.data as string
+      storage.set("Token", action.data as string);
+      cloneState.token = action.data as string;
       break;
     }
     // 获取用户信息
     case GET_USER_INFO: {
-      cloneState.userInfo = action.data as UserInfo | null
+      cloneState.userInfo = action.data as UserInfo | null;
+      break;
+    }
+    // 获取收藏列表
+    case GET_COLLECT_LIST: {
+      cloneState.collectList = action.data as CollectItem[];
+      break
+    }
+    // 退出登录
+    case LOGOUT: {
+      storage.remove('Token')
+      cloneState.token = ''
+      cloneState.collectList = []
+      cloneState.userInfo = null
     }
     default: {
       break;

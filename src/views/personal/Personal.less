@@ -1,0 +1,98 @@
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.personal_container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  .personal_info {
+    margin: 140px auto 0;
+    width: max-content;
+    user-select: none;
+    .portrait {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    h3 {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 18px;
+      line-height: 1em;
+      color: #303030;
+    }
+  }
+  .list_box {
+    width: calc(100% - 40px);
+    border-radius: 8px;
+    background-color: #f6f6f6;
+    margin: 50px auto 0;
+    padding-left: 15px;
+    box-sizing: border-box;
+    user-select: none;
+    .item {
+      height: 60px;
+      padding-right: 15px;
+      box-sizing: border-box;
+      &:extend(.flex);
+      border-bottom: 1px solid #f0f0f0;
+      &:last-child {
+       border-bottom: none;
+      }
+      .left {
+        height: 100%;
+        &:extend(.flex);
+        justify-content: flex-start;
+        i {
+          font-size: 16px;
+          line-height: 1em;
+          text-align: left;
+          color: #101010;
+        }
+        p {
+          font-size: 16px;
+          text-align: left;
+          line-height: 1em;
+          margin-left: 15px;
+          color: #525252;
+        }
+      }
+      .right {
+        height: 100%;
+        &:extend(.flex);
+        justify-content: flex-end;
+        i {
+          font-size: 13px;
+          line-height: 1em;
+          text-align: right;
+          color: #d8d9dd;
+        }
+      }
+    }
+  }
+  .logOut {
+    user-select: none;
+    width: calc(100% - 40px);
+    border-radius: 8px;
+    height: 60px;
+    font-size: 16px;
+    text-align: center;
+    background-color: #fa3a3a;
+    position: absolute;
+    bottom: 100px;
+    left: 20px;
+    &:active {
+      background-color: #f93030;
+    }
+  }
+}

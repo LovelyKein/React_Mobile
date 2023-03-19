@@ -24,8 +24,7 @@ import actions from "@/store/action";
 
 // types
 import { LoginForm } from "@/views/login/login_types";
-import { ElementComponentPropsType } from "@/types/component_props_type";
-import { reducerType } from "@/store/reducer";
+import { HaveActionsElement } from "@/types/component_props_type";
 
 // 校验规则
 const rules = {
@@ -55,7 +54,7 @@ const rules = {
   ],
 };
 
-function Login(props: ElementComponentPropsType) {
+function Login(props: HaveActionsElement) {
   // useState
   const [formData, setFormData] = useState<LoginForm>({ phone: "", code: "" }),
     [codeText, setCodeText] = useState<string>("获取验证码"),
@@ -64,8 +63,9 @@ function Login(props: ElementComponentPropsType) {
   // useRef
 
   // props
-  const { navigate, searchQuery, request_login, requset_userInfo_async } = props;
-  
+  const { navigate, searchQuery, request_login, requset_userInfo_async } =
+    props;
+
   /* methods */
   // 设置表单内容
   const changeForm = (
@@ -125,33 +125,38 @@ function Login(props: ElementComponentPropsType) {
   };
   // 提交表单
   const submit = (event: FormEvent<HTMLFormElement>) => {
-    
     event.preventDefault(); // 组织表单默认提交行为
     // 登录
-    user.login(formData).then(
-      (res) => {
-        const { code, token } = res;
-        if (code === 0) {
-          request_login(token); // redux 储存 token
-          // 异步 redux 获取用户信息
-          requset_userInfo_async().then(() => {
-            Toast.show({
-              content: "登录成功",
-              maskClickable: false,
-              duration: 2000,
-            });
-          })
-        } else {
+    user.login(formData).then((res) => {
+      const { code, token } = res;
+      if (code === 0) {
+        request_login(token); // redux 储存 token
+        // 异步 redux 获取用户信息
+        requset_userInfo_async().then(() => {
           Toast.show({
-            icon: "fail",
-            content: "登录失败",
+            content: "登录成功",
             maskClickable: false,
             duration: 1500,
+            afterClose: () => {
+              const path = searchQuery.get("to");
+              if (path) {
+                navigate({
+                  pathname: `${path}`,
+                });
+              }
+            },
           });
-        }
+        });
+      } else {
+        Toast.show({
+          icon: "fail",
+          content: "登录失败",
+          maskClickable: false,
+          duration: 1500,
+        });
         setFormData({ ...formData, code: "" });
       }
-    );
+    });
   };
   // // 校验
   // const formCheck = (
@@ -189,8 +194,7 @@ function Login(props: ElementComponentPropsType) {
       {/* 导航栏 */}
       <NavBar
         style={{
-          backgroundColor: "#ffffff",
-          padding: "0 20px",
+          backgroundColor: "#fafafa",
         }}
         // leftText='返回'
         righeContent={
@@ -262,8 +266,7 @@ function Login(props: ElementComponentPropsType) {
   );
 }
 
-export default connect((store: reducerType) => {
-  return {
-    user_reducer: store.user,
-  };
-}, actions.userAction)(Login);
+export default connect(null, {
+  requset_userInfo_async: actions.userAction.requset_userInfo_async,
+  request_login: actions.userAction.request_login,
+})(Login);

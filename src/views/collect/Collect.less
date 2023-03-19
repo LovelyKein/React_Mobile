@@ -1,0 +1,47 @@
+.collect_container {
+  width: 100%;
+  height: max-content;
+  overflow: hidden;
+  position: relative;
+  .collect_list {
+    margin-top: 54px;
+    background-color: #ffffff;
+    padding: 35px 20px;
+    box-sizing: border-box;
+  }
+  .foot {
+    margin: 20px auto 0;
+    user-select: none;
+    width: max-content;
+    height: 20px;
+    color: #aaaaaa;
+    text-align: center;
+    display: block;
+    line-height: 20px;
+    font-size: 12px;
+    position: relative;
+    padding: 0 10px;
+    &::before {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      position: absolute;
+      background-color: #f0f0f0;
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    &::after {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      position: absolute;
+      background-color: #f0f0f0;
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}

@@ -9,7 +9,7 @@ interface PropsTypes {
   imageUrl: string;
   title: string;
   hint?: string;
-  id: number
+  id: string
 }
 export default function NewItem(props: PropsTypes) {
   return (

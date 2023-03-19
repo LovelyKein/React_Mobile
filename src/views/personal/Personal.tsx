@@ -2,6 +2,7 @@
 import { connect } from "react-redux";
 import actions from "@/store/action";
 import "./Personal.less";
+import portrait from "@/assets/images/portrait.jpg" // 头像
 
 // components
 import NavBar from "@/components/navBar/NavBar";
@@ -47,7 +48,7 @@ function Personal(props: HaveAllElement) {
       {/* 内容 */}
       <div className="personal_info">
         <div className="portrait">
-          <img src={userInfo?.pic} alt="" />
+          <img src={userInfo?.pic ? userInfo.pic : portrait} alt="" />
         </div>
         <h3>{userInfo?.name}</h3>
       </div>

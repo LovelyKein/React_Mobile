@@ -142,7 +142,7 @@ function Login(props: HaveActionsElement) {
               if (path) {
                 navigate({
                   pathname: `${path}`,
-                });
+                }, {replace: true});
               }
             },
           });

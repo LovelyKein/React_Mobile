@@ -29,6 +29,7 @@ function Personal(props: HaveAllElement) {
     );
   };
 
+  // 路由跳转
   const handleJump = (path: string) => {
     navigate({
       pathname: path,
@@ -47,7 +48,7 @@ function Personal(props: HaveAllElement) {
       </NavBar>
       {/* 内容 */}
       <div className="personal_info">
-        <div className="portrait">
+        <div onClick={() => handleJump('/update')} className="portrait">
           <img src={userInfo?.pic ? userInfo.pic : portrait} alt="" />
         </div>
         <h3>{userInfo?.name}</h3>

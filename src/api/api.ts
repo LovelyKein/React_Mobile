@@ -5,6 +5,7 @@ import { GetNews, NewsData } from "@/views/home/home_types";
 import { NewsDetail } from "@/views/detail/detail_types";
 import { TestCode, LoginInfo, LoginForm, UserInfoPromise } from "@/views/login/login_types";
 import { CollectListPromise } from "@/views/collect/collect_types"
+import { UploadPromise } from "@/views/update/update_types";
 
 /* 新闻 */
 const news = {
@@ -77,22 +78,40 @@ const user = {
   // 移除收藏
   removeCollect: (id: number): Promise<TestCode> => {
     return request({
-      method: 'GET',
-      url: '/store_remove',
+      method: "GET",
+      url: "/store_remove",
       params: {
-        id
+        id,
       },
-      responseType: 'json'
-    })
+      responseType: "json",
+    });
   },
   // 获取收藏新闻的列表
   getCollectList: (): Promise<CollectListPromise> => {
     return request({
-      method: 'GET',
-      url: '/store_list',
-      responseType: 'json'
-    })
-  }
+      method: "GET",
+      url: "/store_list",
+      responseType: "json",
+    });
+  },
+  // 图片上传
+  upload: (file: File): Promise<UploadPromise> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return request({
+      method: "POST",
+      url: "/upload",
+      data: formData,
+    });
+  },
+  // 修改个人信息
+  updateUser: (username: string, pic: string): Promise<UserInfoPromise> => {
+    return request({
+      method: "POST",
+      url: "/user_update",
+      data: `username=${username}&pic=${pic}`
+    });
+  },
 };
 
 // 导出
